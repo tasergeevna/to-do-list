@@ -4,15 +4,5 @@ const taskInput = document.querySelector(".task-input");
 const listInput = document.querySelector(".list-input");
 
 
-taskInput.addEventListener("onchange", () => {
-    console.log(taskInput.value);
-})
 
-const addedFunction = (input, button) => {
-    button.addEventListener("onclick", (evt) => {
-        evt.preventDefault();
-        if (input.value !== "") {
-            
-        }
-    })
-}
+
