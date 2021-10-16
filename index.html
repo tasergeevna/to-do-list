@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html class="page" lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+        <title>To-do list</title>
+    </head>
+    <body>
+        <h1 class="main-headline">Just make a plan</h1>
+        <div class="input-container">
+            <div class="main-input">
+                <input class="task-input" type="text" placeholder="Place for tasks">
+                <button class="add-button add-task" type="button">Add a task</button>
+                <button class="display-none" type="button">Clear</button>
+            </div>
+            <div class="main-input">
+                <input class="list-input" type="text" placeholder="List`s name">
+                <button class="add-button add-list" type="button">Add a list</button>
+                <button class="display-none" type="button">Clear</button>
+            </div>
+        </div>
+        <div class="lists-container">
+            <div class="list-container">
+                <div class="wrapper">
+                    <h2 class="headline general-headline">General</h2>
+                    <ul class="list"></ul>
+                </div>
+                <button class="delete-button">Clear list</button>
+            </div>
+            <div class="ordinary-lists">
+                <div class="list-container">
+                    <div class="wrapper">
+                        <h2 class="headline">Work</h2>
+                        <ul class="list">
+                        </ul>
+                    </div>
+                    <button class="delete-button">Delete list</button>
+                </div>
+                <div class="list-container">
+                    <div class="wrapper">
+                        <h2 class="headline">Family</h2>
+                        <ul class="list">
+                        </ul>
+                    </div>
+                    <button class="delete-button">Delete list</button>
+                </div>
+                <div class="list-container">
+                    <div class="wrapper">
+                        <h2 class="headline">Self improvement</h2>
+                        <ul class="list">
+                        </ul>
+                    </div>
+                    <button class="delete-button">Delete list</button>
+                </div>
+                <div class="list-container">
+                    <div class="wrapper">
+                        <h2 class="headline">Hobby</h2>
+                        <ul class="list">
+                        </ul>
+                    </div>
+                    <button class="delete-button">Delete list</button>
+                </div>
+            </div>
+        </div>
+        <template id="taskTemp">
+            <li class="list">
+                <input class="task-checkbox" type="checkbox" id="" name="Task">
+                <label for=""></label>
+                <button class="display-none" type="button">Delete</button>
+            </li>
+        </template>
+        <template id="listTemp">
+            <div class="list-container">
+                <div class="wrapper">
+                    <h2 class="headline"></h2>
+                    <ul class="list"></ul>
+                </div>
+                <button class="delete-button">Delete list</button>
+            </div>
+        </template>
+    
+            
+       <script src="app.js"></script>
+    </body>
+</html>
