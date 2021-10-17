@@ -132,6 +132,7 @@ a {
     margin-bottom: 10px;
 }
 
+.clear-button,
 .delete-button {
     padding: 5px 5px;
     box-sizing: border-box;
@@ -142,7 +143,13 @@ a {
     border-radius: 10px;
 }
 
+.clear-button:hover,
 .delete-button:hover {
     background-color: #e13535;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
 }
 

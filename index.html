@@ -24,9 +24,9 @@
             <div class="list-container">
                 <div class="wrapper">
                     <h2 class="headline general-headline">General</h2>
-                    <ul class="list"></ul>
+                    <ul class="list general-list"></ul>
                 </div>
-                <button class="delete-button">Clear list</button>
+                <button class="clear-button">Clear list</button>
             </div>
             <div class="ordinary-lists">
                 <div class="list-container">
@@ -63,14 +63,13 @@
                 </div>
             </div>
         </div>
-        <template id="taskTemp">
-            <li class="list">
+        <template id="task-temp">
+            <li class="item">
                 <input class="task-checkbox" type="checkbox" id="" name="Task">
-                <label for=""></label>
-                <button class="display-none" type="button">Delete</button>
+                <button class="display-none task-delete" type="button">Delete</button>
             </li>
         </template>
-        <template id="listTemp">
+        <template id="list-temp">
             <div class="list-container">
                 <div class="wrapper">
                     <h2 class="headline"></h2>
