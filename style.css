@@ -39,6 +39,11 @@ a {
     color: white;
 }
 
+.add-button:active {
+    background-color: #241959;
+    color: white;
+}
+
 .display-none {
     display: none;
 }
@@ -132,7 +137,12 @@ a {
     margin-bottom: 10px;
 }
 
+.clear-button {
+    margin-bottom: 10px;
+}
+
 .clear-button,
+.done-button,
 .delete-button {
     padding: 5px 5px;
     box-sizing: border-box;
@@ -144,12 +154,23 @@ a {
 }
 
 .clear-button:hover,
+.done-button:hover,
 .delete-button:hover {
     background-color: #e13535;
+}
+
+.clear-button:active,
+.done-button:active,
+.delete-button:active {
+    background-color: #a32424;
 }
 
 .item {
     display: flex;
     justify-content: space-between;
+}
+
+.done-item {
+    text-decoration: line-through;
 }
 

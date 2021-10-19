@@ -21,53 +21,24 @@
             </div>
         </div>
         <div class="lists-container">
+            <div class="ordinary-lists">
+            </div>
+        </div>
+        <template id="task-temp">
+            <li class="item">
+                <input class="task-checkbox" type="checkbox" name="Task">
+                <button class="display-none task-delete" type="button">Delete</button>
+            </li>
+        </template>
+        <template id="list-general">
             <div class="list-container">
                 <div class="wrapper">
                     <h2 class="headline general-headline">General</h2>
                     <ul class="list general-list"></ul>
                 </div>
                 <button class="clear-button">Clear list</button>
+                <button class="done-button">Show done</button>
             </div>
-            <div class="ordinary-lists">
-                <div class="list-container">
-                    <div class="wrapper">
-                        <h2 class="headline">Work</h2>
-                        <ul class="list">
-                        </ul>
-                    </div>
-                    <button class="delete-button">Delete list</button>
-                </div>
-                <div class="list-container">
-                    <div class="wrapper">
-                        <h2 class="headline">Family</h2>
-                        <ul class="list">
-                        </ul>
-                    </div>
-                    <button class="delete-button">Delete list</button>
-                </div>
-                <div class="list-container">
-                    <div class="wrapper">
-                        <h2 class="headline">Self improvement</h2>
-                        <ul class="list">
-                        </ul>
-                    </div>
-                    <button class="delete-button">Delete list</button>
-                </div>
-                <div class="list-container">
-                    <div class="wrapper">
-                        <h2 class="headline">Hobby</h2>
-                        <ul class="list">
-                        </ul>
-                    </div>
-                    <button class="delete-button">Delete list</button>
-                </div>
-            </div>
-        </div>
-        <template id="task-temp">
-            <li class="item">
-                <input class="task-checkbox" type="checkbox" id="" name="Task">
-                <button class="display-none task-delete" type="button">Delete</button>
-            </li>
         </template>
         <template id="list-temp">
             <div class="list-container">
@@ -78,8 +49,6 @@
                 <button class="delete-button">Delete list</button>
             </div>
         </template>
-    
-            
-       <script src="app.js"></script>
+        <script src="app.js"></script>
     </body>
 </html>
