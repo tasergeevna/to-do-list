@@ -3,17 +3,11 @@ const addListButton = document.querySelector(".add-list");
 const taskInput = document.querySelector(".task-input");
 const listInput = document.querySelector(".list-input");
 const container = document.querySelector(".lists-container");
-const ordinaryLists = document.querySelector(".ordinary-lists");
-
+// const ordinaryLists = document.querySelector(".ordinary-lists");
 
 const mainObject = {
-    "General": [
-        {name: "task1", status: false},
-        {name: "task2", status: false}
-    ],
-    "Done": [
-        {name: "task3", status: true}
-    ]
+    "General": [],
+    "Done": []
 };
 
 
@@ -34,16 +28,16 @@ const rendering = (mainObject) => {
             taskItem.textContent = mainObject["Done"][i].name;
             taskItem.classList.add("done-item");
             taskCheckbox.checked = true;
+            taskCheckbox.disabled = true;
             listGeneral.appendChild(taskItem);
-        taskItem.prepend(taskCheckbox, deleteTaskButton);
+            taskItem.prepend(taskCheckbox, deleteTaskButton);
         }
     })
     
     for (let i = 0; i < mainObject["General"].length; i++) {
-        const {taskItem, taskCheckbox, deleteTaskButton} = taskRendering();
-        taskItem.textContent = mainObject["General"][i].name;
+        const {taskItem, taskCheckbox, deleteTaskButton, taskText} = taskRendering();
+        taskText.textContent = mainObject["General"][i].name;
         taskCheckbox.checked = false;
-        
         taskCheckbox.addEventListener("change", (event) => {
             if (event.target.checked) {
                 mainObject["Done"].push(mainObject["General"][i]);
@@ -51,14 +45,35 @@ const rendering = (mainObject) => {
                 rendering(mainObject);
             }
         })
-        
+        deleteTaskButton.addEventListener("click", (event) => {
+            event.preventDefault();
+            mainObject["General"].splice(i, 1);
+            rendering(mainObject);
+        })
         listGeneral.appendChild(taskItem);
-        taskItem.prepend(taskCheckbox, deleteTaskButton);
-       
-        
+        taskItem.prepend(taskCheckbox, taskText, deleteTaskButton);
     }
 
-   
+    if (Object.keys(mainObject).length > 2) {
+        ordinaryLists = document.createElement("div");
+        ordinaryLists.classList.add("ordinary-lists");
+        container.appendChild(ordinaryLists);
+
+        for (let key in mainObject) {
+            if (key !== "General" && key !== "Done") {
+                const {listContainer, listHeadline, listDelete}  = listRendering();
+                listHeadline.textContent = key;
+                ordinaryLists.appendChild(listContainer);
+                listContainer.prepend(listHeadline, listDelete); 
+                listDelete.addEventListener("click", (event) => {
+                    event.preventDefault();
+                    ordinaryLists.removeChild(listContainer);
+                })
+            
+            }
+        }
+    }
+    
 }
 
 
@@ -78,32 +93,35 @@ const taskRendering = () => {
     const taskClone = taskTemp.content.cloneNode(true);
     const taskItem = taskClone.querySelector(".item");
     const taskCheckbox = taskClone.querySelector(".task-checkbox");
+    const taskText = taskClone.querySelector(".item-text");
     const deleteTaskButton = taskClone.querySelector(".task-delete");
-    return {taskItem, taskCheckbox, deleteTaskButton};
+    return {taskItem, taskCheckbox, deleteTaskButton, taskText};
 }
 
-rendering(mainObject);
 
-
-/*
 taskInput.addEventListener("change", updateTask);
 
-listInput.addEventListener("change", updateList);
 
-// for (let key in mainObject) {    
+function updateTask(event) {
+    taskInput.textContent = event.target.value;
+}
 
 addTaskButton.addEventListener("click", (event) => {
     event.preventDefault();
     if (taskInput.value == "") {
         alert("Write smthng!")
     } else {
-        mainObject["General"][i].name =  taskInput.value;
-        mainObject["General"][i].status = false;
+        mainObject["General"].push({name: taskInput.value, status: false})
         taskInput.value = ""; 
         rendering(mainObject);
     }
 })
 
+listInput.addEventListener("change", updateList);
+
+function updateList(event) {
+    listInput.textContent = event.target.value;
+}
 
 
 addListButton.addEventListener("click", (event) => {
@@ -111,35 +129,21 @@ addListButton.addEventListener("click", (event) => {
     if (listInput.value == "") {
         alert("Write smthng!")
     } else {
-        let j = listInput.value;
-        mainObject[j] = [];
+        mainObject[listInput.value] = [];
         listInput.value = "";
         rendering(mainObject);
     }
 })
-
-
-//ordinaryLists.appendChild(listContainer);
-//listContainer.prependChild(listHeadline);
-
-
 
 const listRendering = () => {
     const listTemp = document.querySelector("#list-temp");
     const listClone = listTemp.content.cloneNode(true);
     const listContainer = listClone.querySelector(".list-container");
     const listHeadline = listContainer.querySelector(".headline");
-    return {listContainer, listHeadline}
+    const listDelete = listContainer.querySelector(".delete-button");
+    return {listContainer, listHeadline, listDelete}
 }
 
+rendering(mainObject);
 
 
-
-function updateTask(event) {
-    taskInput.textContent = event.target.value;
-}
-
-function updateList(event) {
-    listInput.textContent = event.target.value;
-}
-*/
