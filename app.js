@@ -3,13 +3,14 @@ const addListButton = document.querySelector(".add-list");
 const taskInput = document.querySelector(".task-input");
 const listInput = document.querySelector(".list-input");
 const container = document.querySelector(".lists-container");
-// const ordinaryLists = document.querySelector(".ordinary-lists");
 
 const mainObject = {
     "General": [],
     "Done": []
 };
 
+
+// Page rendering
 
 const rendering = (mainObject) => {
     container.innerHTML = "";
@@ -24,18 +25,26 @@ const rendering = (mainObject) => {
     showDoneButton.addEventListener("click", (event) => {
         event.preventDefault();
         for (let i = 0; i < mainObject["Done"].length; i++) {
-            const {taskItem, taskCheckbox, deleteTaskButton} = taskRendering();
-            taskItem.textContent = mainObject["Done"][i].name;
+            const {taskItem, taskCheckbox, deleteTaskButton, taskText} = taskRendering();
+            taskText.textContent = mainObject["Done"][i].name;
             taskItem.classList.add("done-item");
             taskCheckbox.checked = true;
             taskCheckbox.disabled = true;
+            deleteTaskButton.disabled = true;
             listGeneral.appendChild(taskItem);
-            taskItem.prepend(taskCheckbox, deleteTaskButton);
+            taskItem.prepend(taskCheckbox, taskText, deleteTaskButton);
         }
     })
     
     for (let i = 0; i < mainObject["General"].length; i++) {
         const {taskItem, taskCheckbox, deleteTaskButton, taskText} = taskRendering();
+        taskItem.addEventListener("dragstart", (event) => {
+            event.target.classList.add("hold");
+            setTimeout(() => {
+                mainObject["General"].splice(i, 1);
+            }, 0);
+        });
+        taskItem.addEventListener("dragend", dragend);
         taskText.textContent = mainObject["General"][i].name;
         taskCheckbox.checked = false;
         taskCheckbox.addEventListener("change", (event) => {
@@ -63,6 +72,10 @@ const rendering = (mainObject) => {
             if (key !== "General" && key !== "Done") {
                 const {listContainer, listHeadline, listDelete}  = listRendering();
                 listHeadline.textContent = key;
+                listContainer.addEventListener("dragover", dragover);
+                listContainer.addEventListener("dragenter", dragenter)
+                listContainer.addEventListener("dragleave", dragleave)
+                listContainer.addEventListener("drop", dragdrop)
                 ordinaryLists.appendChild(listContainer);
                 listContainer.prepend(listHeadline, listDelete); 
                 listDelete.addEventListener("click", (event) => {
@@ -76,6 +89,7 @@ const rendering = (mainObject) => {
     
 }
 
+// Extracting from templates
 
 const generalListRendering = () => {
     const listTemp = document.querySelector("#list-general");
@@ -143,6 +157,34 @@ const listRendering = () => {
     const listDelete = listContainer.querySelector(".delete-button");
     return {listContainer, listHeadline, listDelete}
 }
+
+// Moving tasks
+
+function dragend(event) {
+    event.target.className = "item";  
+}
+
+function dragover(event) {
+    event.preventDefault();
+    rendering(mainObject);
+}
+
+function dragenter(event) {
+    event.target.classList.add("hovered");
+    rendering(mainObject);
+}
+
+function dragleave(event) {
+    event.target.classList.remove("hovered");
+    rendering(mainObject);
+}
+
+function dragdrop(event) {
+    event.target.classList.remove("hovered");
+    event.target.append(taskItem);
+    rendering(mainObject);
+}
+
 
 rendering(mainObject);
 

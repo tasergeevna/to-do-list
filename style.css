@@ -168,6 +168,7 @@ a {
 .item {
     display: flex;
     justify-content: space-between;
+    cursor: pointer;
 }
 
 .done-item {
@@ -178,5 +179,18 @@ a {
     background-color: transparent;
     border: none;
     cursor: pointer;
+}
+
+.item-text {
+    cursor: pointer;
+}
+
+.wrapper {
+    margin-bottom: 10px;
+}
+
+.hold {
+    border: 2px solid #e13535;
+    border-radius: 10px;
 }
 
