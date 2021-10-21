@@ -194,3 +194,8 @@ a {
     border-radius: 10px;
 }
 
+.hovered {
+    border-top: 4px solid #e13535;
+  }
+  
+

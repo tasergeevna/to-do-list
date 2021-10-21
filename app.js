@@ -12,9 +12,10 @@ const mainObject = {
 
 // Page rendering
 
+let j;
+
 const rendering = (mainObject) => {
     container.innerHTML = "";
-
     const {listGenContainer, listGeneral, listGenButton, showDoneButton} = generalListRendering();
     container.appendChild(listGenContainer);
     listGenButton.addEventListener("click", (event) => {
@@ -38,10 +39,11 @@ const rendering = (mainObject) => {
     
     for (let i = 0; i < mainObject["General"].length; i++) {
         const {taskItem, taskCheckbox, deleteTaskButton, taskText} = taskRendering();
+       
         taskItem.addEventListener("dragstart", (event) => {
             event.target.classList.add("hold");
             setTimeout(() => {
-                mainObject["General"].splice(i, 1);
+                event.target.classList.add("display-none");
             }, 0);
         });
         taskItem.addEventListener("dragend", dragend);
@@ -61,6 +63,10 @@ const rendering = (mainObject) => {
         })
         listGeneral.appendChild(taskItem);
         taskItem.prepend(taskCheckbox, taskText, deleteTaskButton);
+        j = {
+            taskItem,
+            name: taskText.textContent
+        };
     }
 
     if (Object.keys(mainObject).length > 2) {
@@ -69,18 +75,28 @@ const rendering = (mainObject) => {
         container.appendChild(ordinaryLists);
 
         for (let key in mainObject) {
+
             if (key !== "General" && key !== "Done") {
                 const {listContainer, listHeadline, listDelete}  = listRendering();
                 listHeadline.textContent = key;
                 listContainer.addEventListener("dragover", dragover);
                 listContainer.addEventListener("dragenter", dragenter)
                 listContainer.addEventListener("dragleave", dragleave)
-                listContainer.addEventListener("drop", dragdrop)
+                listContainer.addEventListener("drop", (event) => {
+                    event.target.classList.remove("hovered");
+                    mainObject[key].push(
+                        {name: j.name, status: false}
+                    );
+                    listContainer.prepend(j.taskItem);
+                    j = null;
+                })
                 ordinaryLists.appendChild(listContainer);
                 listContainer.prepend(listHeadline, listDelete); 
                 listDelete.addEventListener("click", (event) => {
                     event.preventDefault();
+                    delete mainObject[key];
                     ordinaryLists.removeChild(listContainer);
+                    console.log(mainObject);
                 })
             
             }
@@ -161,28 +177,19 @@ const listRendering = () => {
 // Moving tasks
 
 function dragend(event) {
-    event.target.className = "item";  
+    event.target.classList.remove("hold");
 }
 
 function dragover(event) {
     event.preventDefault();
-    rendering(mainObject);
 }
 
 function dragenter(event) {
     event.target.classList.add("hovered");
-    rendering(mainObject);
 }
 
 function dragleave(event) {
     event.target.classList.remove("hovered");
-    rendering(mainObject);
-}
-
-function dragdrop(event) {
-    event.target.classList.remove("hovered");
-    event.target.append(taskItem);
-    rendering(mainObject);
 }
 
 
