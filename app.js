@@ -43,8 +43,13 @@ const rendering = (mainObject) => {
         taskItem.addEventListener("dragstart", (event) => {
             event.target.classList.add("hold");
             setTimeout(() => {
-                event.target.classList.add("display-none");
+                mainObject["General"].splice(i, 1);
+                listGeneral.remove(event.target);
             }, 0);
+            j = {
+                taskItem,
+                name: taskText.textContent
+            };
         });
         taskItem.addEventListener("dragend", dragend);
         taskText.textContent = mainObject["General"][i].name;
@@ -63,10 +68,6 @@ const rendering = (mainObject) => {
         })
         listGeneral.appendChild(taskItem);
         taskItem.prepend(taskCheckbox, taskText, deleteTaskButton);
-        j = {
-            taskItem,
-            name: taskText.textContent
-        };
     }
 
     if (Object.keys(mainObject).length > 2) {
@@ -77,7 +78,7 @@ const rendering = (mainObject) => {
         for (let key in mainObject) {
 
             if (key !== "General" && key !== "Done") {
-                const {listContainer, listHeadline, listDelete}  = listRendering();
+                const {listContainer, listHeadline, listDelete, listOrdinary}  = listRendering();
                 listHeadline.textContent = key;
                 listContainer.addEventListener("dragover", dragover);
                 listContainer.addEventListener("dragenter", dragenter)
@@ -87,16 +88,25 @@ const rendering = (mainObject) => {
                     mainObject[key].push(
                         {name: j.name, status: false}
                     );
-                    listContainer.prepend(j.taskItem);
+                    // Добавила, чтобы массивы очищались при перемещении пунктов
+                    j.taskItem.addEventListener("dragstart", (event) => {
+                        event.target.classList.add("hold");
+                        setTimeout(() => {
+                            mainObject[key].splice(0, 1);
+                            listOrdinary.remove(event.target);
+                        }, 0);
+                    })
+                    j.taskItem.addEventListener("dragend", dragend);
+                    // здесь конец вставки
+                    listOrdinary.append(j.taskItem);
                     j = null;
                 })
                 ordinaryLists.appendChild(listContainer);
-                listContainer.prepend(listHeadline, listDelete); 
+                listContainer.prepend(listHeadline, listOrdinary, listDelete); 
                 listDelete.addEventListener("click", (event) => {
                     event.preventDefault();
                     delete mainObject[key];
                     ordinaryLists.removeChild(listContainer);
-                    console.log(mainObject);
                 })
             
             }
@@ -171,7 +181,8 @@ const listRendering = () => {
     const listContainer = listClone.querySelector(".list-container");
     const listHeadline = listContainer.querySelector(".headline");
     const listDelete = listContainer.querySelector(".delete-button");
-    return {listContainer, listHeadline, listDelete}
+    const listOrdinary = listContainer.querySelector(".list");
+    return {listContainer, listHeadline, listDelete, listOrdinary}
 }
 
 // Moving tasks

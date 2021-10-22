@@ -121,20 +121,29 @@ a {
     justify-content: space-between;
 }
 
-.list-container {
+.general-container {
     border: 2px solid #e13535;
     border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
+}
+
+.list-container {
+    
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     padding: 10px 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
 }
 
 .headline {
     text-align: center;
     margin: 0;
     margin-bottom: 10px;
+}
+
+.headline-ordinary {
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e13535;
 }
 
 .clear-button {
@@ -195,7 +204,8 @@ a {
 }
 
 .hovered {
-    border-top: 4px solid #e13535;
-  }
+    border: 2px solid #3b2995;
+    border-radius: 20px;
+}
   
 
