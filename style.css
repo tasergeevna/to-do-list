@@ -112,6 +112,9 @@ a {
 .list {
     margin: 0;
     padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
 }
 
 .list li {
@@ -128,7 +131,6 @@ a {
 }
 
 .list-container {
-    
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -150,9 +152,7 @@ a {
     margin-bottom: 10px;
 }
 
-.clear-button,
-.done-button,
-.delete-button {
+.button {
     padding: 5px 5px;
     box-sizing: border-box;
     background-color: #3b2995;
@@ -162,15 +162,11 @@ a {
     border-radius: 10px;
 }
 
-.clear-button:hover,
-.done-button:hover,
-.delete-button:hover {
+.button:hover {
     background-color: #e13535;
 }
 
-.clear-button:active,
-.done-button:active,
-.delete-button:active {
+.button:active {
     background-color: #a32424;
 }
 
