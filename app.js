@@ -24,75 +24,31 @@ const rendering = (mainObject) => {
             for (let i = 0; i < mainObject[key].length; i++) {
                 const {taskItem, taskCheckbox, deleteTaskButton, taskText} = taskRendering();
                 taskText.textContent = mainObject[key][i].name;
-                taskItem.addEventListener("dragstart", (event) => {
-                    event.target.classList.add("hold");
-                    setTimeout(() => {
-                        event.target.classList.add("display-none");
-                    }, 0);
-                    j = {
-                        taskItem,
-                        name: taskText.textContent,
-                        i,
-                        key
-                    };
-                });
+                taskItem.setAttribute("data-key", key);
+                taskItem.setAttribute("data-index", i);
+                taskItem.addEventListener("dragstart", dragstart);
                 taskItem.addEventListener("dragend", dragend);
                 taskCheckbox.checked = false;
-                taskCheckbox.addEventListener("change", (event) => {
-                    if (event.target.checked) {
-                        mainObject["Done"].push(mainObject[key][i]);
-                        mainObject[key].splice(i, 1);
-                        rendering(mainObject);
-                    }
-                })
-                deleteTaskButton.addEventListener("click", (event) => {
-                    event.preventDefault();
-                    mainObject[key].splice(i, 1);
-                    rendering(mainObject);
-            })
+                taskCheckbox.addEventListener("change", checkboxChange);
+                deleteTaskButton.addEventListener("click", deleteTask);
                 list.appendChild(taskItem);
                 taskItem.prepend(taskCheckbox, taskText, deleteTaskButton);
             }
             listContainer.addEventListener("dragover", dragover);
-            listContainer.addEventListener("dragenter", () => {
-                listContainer.classList.add("hovered");
-            })
-            listContainer.addEventListener("dragleave", dragleave)
-            listContainer.addEventListener("drop", () => {
-                listContainer.classList.remove("hovered");
-                mainObject[j.key].splice(j.i, 1);
-                mainObject[key].push(
-                    {name: j.name, status: false} 
-                );
-                list.append(j.taskItem);
-                j = null;
-                rendering(mainObject);
-            })
+            listContainer.setAttribute("data-key", key);
+            listContainer.addEventListener("dragenter", dragenter);
+            listContainer.addEventListener("dragleave", dragleave);
+            listContainer.addEventListener("drop", dragdrop);
             listHeadline.textContent = key;
             if (key === "General") {
                 listHeadline.textContent = "General";
                 listContainer.classList.add("general-container");
                 container.appendChild(listContainer);
+                list.classList.add("done-list");
+                listContainer.prepend(listHeadline, list);
                 listContainer.removeChild(listDelete);
-                listClearButton.addEventListener("click", (event) => {
-                    event.preventDefault();
-                    list.innerHTML = "";
-                    mainObject["General"].length = 0;
-                })
-                showDoneButton.addEventListener("click", (event) => {
-                    event.preventDefault();
-                    for (let i = 0; i < mainObject["Done"].length; i++) {
-                        const {taskItem, taskCheckbox, deleteTaskButton, taskText} = taskRendering();
-                        taskText.textContent = mainObject["Done"][i].name;
-                        taskItem.classList.add("done-item");
-                        taskCheckbox.checked = true;
-                        taskCheckbox.disabled = true;
-                        deleteTaskButton.disabled = true;
-                        taskItem.removeAttribute(draggable="true");
-                        list.appendChild(taskItem);
-                        taskItem.prepend(taskCheckbox, taskText, deleteTaskButton);
-                    }
-                }) 
+                listClearButton.addEventListener("click", clearGeneralList);
+                showDoneButton.addEventListener("click", showDoneTasks);
                 if (Object.keys(mainObject).length > 2) {
                     ordinaryLists = document.createElement("div");
                     ordinaryLists.classList.add("ordinary-lists");
@@ -104,13 +60,9 @@ const rendering = (mainObject) => {
                     listContainer.prepend(listHeadline, list, listDelete); 
                     listContainer.removeChild(listClearButton);
                     listContainer.removeChild(showDoneButton);
-                    listDelete.addEventListener("click", (event) => {
-                        event.preventDefault();
-                        delete mainObject[key];
-                        ordinaryLists.removeChild(listContainer);
-                    })
+                    listDelete.addEventListener("click", deleteList);
             }
-        }
+        } 
     }
     
 }
@@ -128,7 +80,6 @@ const taskRendering = () => {
     const deleteTaskButton = taskClone.querySelector(".task-delete");
     return {taskItem, taskCheckbox, deleteTaskButton, taskText};
 }
-
 
 taskInput.addEventListener("change", updateTask);
 
@@ -179,7 +130,18 @@ const listRendering = () => {
 }
 
 
-// Moving tasks
+// Drag`n`drop listeners 
+
+function dragstart(event) {
+    event.target.classList.add("hold");
+    setTimeout(() => {
+        event.target.classList.add("display-none");
+    }, 0);
+    j = {
+        taskItem: event.target,
+        name: event.target.textContent
+    }
+}
 
 function dragend(event) {
     event.target.classList.remove("hold");
@@ -190,8 +152,71 @@ function dragover(event) {
     event.preventDefault();
 }
 
+function dragenter(event) {
+    event.currentTarget.classList.add("hovered");
+}
+
 function dragleave(event) {
     event.target.classList.remove("hovered");
+}
+
+function dragdrop(event) {
+    event.target.classList.remove("hovered");
+    mainObject[j.taskItem.dataset.key].splice(j.taskItem.dataset.i, 1);
+    mainObject[event.currentTarget.dataset.key].push(
+        {name: j.name, status: false} 
+    );
+    event.target.parentNode.append(j.taskItem);
+    j = null;
+    rendering(mainObject);
+}
+
+// Buttons and checkboxes listeners
+
+function checkboxChange(event) {
+    if (event.target.checked) {
+        let root = event.target.parentNode.dataset;
+        mainObject["Done"].push(mainObject[root.key][root.index]);
+        mainObject[root.key].splice(root.index, 1);
+        rendering(mainObject);
+    }
+}
+
+function deleteTask(event) {
+    event.preventDefault();
+    let root = event.target.parentNode;
+    mainObject[root.parentNode.dataset.key].splice(root.dataset.index, 1);
+    rendering(mainObject);
+}
+
+function clearGeneralList(event) {
+    event.preventDefault();
+    mainObject["General"].length = 0;
+    rendering(mainObject);
+}
+
+function showDoneTasks(event) {
+    event.preventDefault();
+    doneList = document.querySelector(".done-list");
+    for (let i = 0; i < mainObject["Done"].length; i++) {
+        const {taskItem, taskCheckbox, deleteTaskButton, taskText} = taskRendering();
+        taskText.textContent = mainObject["Done"][i].name;
+        taskItem.classList.add("done-item");
+        taskCheckbox.checked = true;
+        taskCheckbox.disabled = true;
+        deleteTaskButton.disabled = true;
+        taskItem.removeAttribute(draggable="true");
+        doneList.appendChild(taskItem);
+        taskItem.prepend(taskCheckbox, taskText, deleteTaskButton);
+    }
+}
+
+
+function deleteList(event) {
+    event.preventDefault();
+    let root = event.target.parentNode;
+    delete mainObject[root.dataset.key];
+    root.parentNode.removeChild(root);
 }
 
 
